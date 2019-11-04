@@ -1,0 +1,20 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t fendyhj/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run fendyhj/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t fendyhj/multi-client ./client
+  - docker build -t fendyhj/multi-nginx ./nginx
+  - docker build -t fendyhj/multi-server ./server
+  - docker build -t fendyhj/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push fendyhj/multi-client
+  - docker push fendyhj/multi-nginx
+  - docker push fendyhj/multi-server
+  - docker push fendyhj/multi-worker
