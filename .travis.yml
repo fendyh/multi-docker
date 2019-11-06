@@ -18,3 +18,17 @@ after_success:
   - docker push fendyhj/multi-nginx
   - docker push fendyhj/multi-server
   - docker push fendyhj/multi-worker
+
+  deploy:
+    provider: elasticbeanstalk
+    region: us-west-2
+    app: multi-docker
+    env: MultiDocker-env
+    bucket_name: elasticbeanstalk-us-west-2-971188662855
+    bucket_path: docker-multi
+    on:
+      branch: master
+    access_key_id:
+      secure: $AWS_ACCESS_KEY
+    secret_access_key:
+      secure: $AWS_SECRET_KEY
